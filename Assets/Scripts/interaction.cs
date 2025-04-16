@@ -9,6 +9,7 @@ public class TriggerInteraction : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         enteredTrigger.Invoke();
+        ScoreManager.Instance.AddScore(100);
     }
 
     private void OnTriggerExit2D(Collider2D other)
