@@ -13909,10 +13909,13 @@ MonoBehaviour:
   walkSpeed: 2.5
   runSpeed: 5
   jumpingPower: 10
+  crouchSpeed: 1.5
+  animator: {fileID: 1660304087}
   rb: {fileID: 1660304082}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  objectToDisableWhenCrouching: {fileID: 0}
 --- !u!50 &1660304082
 Rigidbody2D:
   serializedVersion: 4
