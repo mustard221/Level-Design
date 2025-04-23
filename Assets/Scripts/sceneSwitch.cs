@@ -6,10 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class sceneSwitch : MonoBehaviour
 {
+    public string sceneToLoad;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        SceneManager.LoadScene("Level2");
+        SceneManager.LoadScene(sceneToLoad);
     }
 
     
