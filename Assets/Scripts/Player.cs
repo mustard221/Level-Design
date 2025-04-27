@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    private Collider2D mouseCollider;
+
     private float horizontal;
     public float walkSpeed = 7f;
     public float runSpeed = 10f;
@@ -14,12 +17,14 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Image bar;
 
     [SerializeField] private Collider2D objectToDisableWhenCrouching;
 
     private bool isGrounded;
     private bool isCrouching = false;
     private bool canMove = false;
+    private bool takeDamage = false;
 
     private void Start()
     {
@@ -32,17 +37,24 @@ public class Player : MonoBehaviour
         {
             canMove = true;
         }
+
+        mouseCollider = GameObject.FindGameObjectWithTag("Mouse").GetComponent<Collider2D>();
+
     }
 
     private IEnumerator EnableMovement()
     {
         yield return new WaitForSeconds(2.5f);
         canMove = true;
-
     }
 
     private void Update()
     {
+        if (takeDamage)
+        {
+            bar.fillAmount -= 0.005f;
+            takeDamage = false;
+        }
 
         if (!canMove) return;
 
@@ -93,12 +105,21 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
     }
 
-    // detecting if player is on ground
+    // detecting if player is on ground and if colliding with mouse
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
             isGrounded = true;
         animator.SetBool("IsJumping", false);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Mouse"))
+        {
+            Debug.Log("collided");
+            takeDamage = true;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
