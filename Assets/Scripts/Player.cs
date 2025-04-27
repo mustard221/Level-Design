@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -18,9 +19,33 @@ public class Player : MonoBehaviour
 
     private bool isGrounded;
     private bool isCrouching = false;
+    private bool canMove = false;
+
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene().name == "Tutorial")
+        {
+            canMove = false;
+            StartCoroutine(EnableMovement());
+        }
+        else
+        {
+            canMove = true;
+        }
+    }
+
+    private IEnumerator EnableMovement()
+    {
+        yield return new WaitForSeconds(2.5f);
+        canMove = true;
+
+    }
 
     private void Update()
     {
+
+        if (!canMove) return;
+
         // get movement input
         horizontal = Input.GetAxisRaw("Horizontal");
 
@@ -54,6 +79,8 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!canMove) return;
+
         // choose speed based on run input
         float speed = Input.GetButton("Run") ? runSpeed : walkSpeed;
 
