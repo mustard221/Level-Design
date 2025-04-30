@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Image bar;
+    [SerializeField] private GameObject attackHitbox;
 
     [SerializeField] private Collider2D objectToDisableWhenCrouching;
 
@@ -46,6 +47,13 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(2.5f);
         canMove = true;
+    }
+
+    private IEnumerator ResetAttack()
+    {
+        yield return new WaitForSeconds(0.3f);
+        animator.SetBool("IsAttack", false);
+        attackHitbox.SetActive(false);
     }
 
     private void Update()
@@ -86,6 +94,13 @@ public class Player : MonoBehaviour
         else if (!Input.GetButton("Crouch") && isCrouching)
         {
             ToggleCrouch(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            animator.SetBool("IsAttack", true);
+            attackHitbox.SetActive(true);
+            StartCoroutine(ResetAttack());
         }
     }
 
